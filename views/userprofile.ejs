@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head') %>
+    <title>User Profile - Blogify</title>
+    <style>
+      body {
+        font-family: "Inter", Arial, sans-serif;
+        background: linear-gradient(135deg, #f6f9fc 0%, #eef2f7 100%);
+        color: #333;
+      }
+
+      /* Profile Container */
+      .profile-container {
+        max-width: 650px;
+        margin: 2.5rem auto;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+        padding: 2.5rem;
+        transition: transform 0.3s ease;
+      }
+      .profile-container:hover {
+        transform: translateY(-4px);
+      }
+
+      h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #222;
+      }
+  
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Avatar */
+      .avatar-container {
+        position: relative;
+        width: 140px;
+        height: 140px;
+        margin: 0 auto 1.75rem;
+        cursor: pointer;
+      }
+      .avatar-image {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid transparent;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        padding: 4px;
+        transition: transform 0.3s ease, border-color 0.3s ease;
+      }
+      .avatar-container:hover .avatar-image {
+        transform: scale(1.05);
+        border-color: #2575fc;
+      }
+      .avatar-overlay {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.55);
+        color: white;
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .avatar-container:hover .avatar-overlay {
+        opacity: 1;
+      }
+
+      /* Tabs */
+      .tab-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #eee;
+      }
+      .tab {
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        color: #666;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+      .tab:hover {
+        color: #2575fc;
+      }
+      .tab.active {
+        border-bottom-color: #6a11cb;
+        color: #6a11cb;
+        font-weight: 600;
+      }
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+
+      .profile-field {
+        margin-bottom: 1.5rem;
+      }
+      .profile-label {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #444;
+        margin-bottom: 0.4rem;
+        display: block;
+      }
+      .profile-value {
+        padding: 0.9rem 1rem;
+        border: 1px solid #e1e4e8;
+        border-radius: 8px;
+        background: #f9fafc;
+        font-size: 1rem;
+        color: #333;
+        display: inline-block;
+        width: calc(100% - 70px);
+      }
+      .edit-btn {
+        background: none;
+        border: none;
+        color: #6a11cb;
+        cursor: pointer;
+        font-size: 0.85rem;
+        margin-left: 0.75rem;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+      .edit-btn:hover {
+        color: #2575fc;
+      }
+
+      /* Input fields */
+      .edit-input {
+        padding: 0.9rem 1rem;
+        border: 2px solid #6a11cb;
+        border-radius: 8px;
+        width: 100%;
+        font-size: 1rem;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      .edit-input:focus {
+        border-color: #2575fc;
+        box-shadow: 0 0 6px rgba(37, 117, 252, 0.3);
+        outline: none;
+      }
+
+      /* Buttons */
+      .save-btn {
+        display: inline-block;
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: #fff;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        margin-top: 1rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .save-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(106, 17, 203, 0.25);
+      }
+      .save-btn:active {
+        transform: scale(0.98);
+      }
+
+      .hidden {
+        display: none;
+      }
+      .password-toggle {
+        cursor: pointer;
+        color: #6a11cb;
+        margin-left: 0.5rem;
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/navbar') %>
+
+    <div class="container my-5">
+      <div class="profile-container">
+        <h2 class="text-center mb-4">User Profile</h2>
+        <div
+          class="avatar-container"
+          onclick="document.getElementById('avatarInput').click()"
+        >
+          <img
+            src="<%= user.profileImageURL %>"
+            alt="Profile Avatar"
+            class="avatar-image"
+            id="avatarPreview"
+          />
+          <div class="avatar-overlay">
+            <span>Change Avatar</span>
+          </div>
+          <input
+            type="file"
+            id="avatarInput"
+            name="avatar"
+            accept="image/*"
+            class="hidden"
+            onchange="uploadAvatar(this)"
+          />
+        </div>
+
+        <div class="tab-container">
+          <div class="tab active" onclick="switchTab('profile')">Profile</div>
+          <div class="tab" onclick="switchTab('security')">Security</div>
+        </div>
+
+        <div id="profileTab" class="tab-content active">
+          <form id="profileForm" action="/user/update-profile" method="POST">
+            <div class="profile-field">
+              <label class="profile-label">Full Name</label>
+              <span class="profile-value" id="nameDisplay"
+                ><%= user.fullName %></span
+              >
+              <input
+                type="text"
+                name="fullName"
+                class="edit-input hidden"
+                id="nameInput"
+                value="<%= user.fullName %>"
+              />
+              <button
+                type="button"
+                class="edit-btn"
+                onclick="toggleEdit('name')"
+              >
+                Edit
+              </button>
+            </div>
+
+            <div class="profile-field">
+              <label class="profile-label">Email</label>
+              <span class="profile-value" id="emailDisplay"
+                ><%= user.email %></span
+              >
+              <input
+                type="email"
+                name="email"
+                class="edit-input hidden"
+                id="emailInput"
+                value="<%= user.email %>"
+              />
+              <button
+                type="button"
+                class="edit-btn"
+                onclick="toggleEdit('email')"
+              >
+                Edit
+              </button>
+            </div>
+
+            <button type="submit" class="save-btn hidden" id="profileSaveBtn">
+              Save Changes
+            </button>
+          </form>
+        </div>
+
+        <div id="securityTab" class="tab-content">
+          <form id="passwordForm" action="/user/change-password" method="POST">
+            <div class="profile-field">
+              <label class="profile-label">Current Password</label>
+              <input
+                type="password"
+                name="currentPassword"
+                class="edit-input"
+                required
+              />
+            </div>
+
+            <div class="profile-field">
+              <label class="profile-label">New Password</label>
+              <input
+                type="password"
+                name="newPassword"
+                class="edit-input"
+                required
+                minlength="6"
+              />
+            </div>
+
+            <div class="profile-field">
+              <label class="profile-label">Confirm New Password</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                class="edit-input"
+                required
+              />
+            </div>
+
+            <button type="submit" class="save-btn">Change Password</button>
+          </form>
+          <div id="msg"></div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('./partials/scripts') %>
+
+    <script>
+      function showFeedback(type, message) {
+        const box = document.getElementById("feedbackBox");
+        box.className = "feedback " + type + " show";
+        box.textContent = message;
+
+        setTimeout(() => {
+          box.classList.remove("show");
+        }, 4000);
+      }
+
+      function switchTab(tabName) {
+        document
+          .querySelectorAll(".tab")
+          .forEach((tab) => tab.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((content) => content.classList.remove("active"));
+
+        document
+          .querySelector(`.tab:nth-child(${tabName === "profile" ? 1 : 2})`)
+          .classList.add("active");
+        document.getElementById(tabName + "Tab").classList.add("active");
+      }
+
+      function toggleEdit(field) {
+        const display = document.getElementById(field + "Display");
+        const input = document.getElementById(field + "Input");
+        const saveBtn = document.getElementById("profileSaveBtn");
+
+        if (input.classList.contains("hidden")) {
+          display.classList.add("hidden");
+          input.classList.remove("hidden");
+        } else {
+          input.classList.add("hidden");
+          display.classList.remove("hidden");
+        }
+
+        const anyEditing = Array.from(
+          document.querySelectorAll(".edit-input")
+        ).some((inp) => !inp.classList.contains("hidden"));
+
+        if (anyEditing) {
+          saveBtn.classList.remove("hidden");
+        } else {
+          saveBtn.classList.add("hidden");
+        }
+      }
+
+      function uploadAvatar(input) {
+        if (input.files && input.files[0]) {
+          const formData = new FormData();
+          formData.append("avatar", input.files[0]);
+
+          fetch("/user/upload-avatar", {
+            method: "POST",
+            body: formData,
+          }).catch((error) => {
+            console.error("Error:", error);
+            showFeedback("error", "Error uploading avatar");
+          });
+        }
+      }
+
+      document
+        .getElementById("passwordForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const newPassword = this.elements.newPassword.value;
+          const confirmPassword = this.elements.confirmPassword.value;
+          if (newPassword !== confirmPassword) {
+            showFeedback("error", "New passwords do not match!");
+            return;
+          }
+
+          const formData = new FormData(this);
+          const response = await fetch("/user/change-password", {
+            method: "POST",
+            body: formData,
+          });
+
+          const result = await response.json();
+
+          if (!result.success) {
+            showFeedback("error", result.error);
+          } else {
+            showFeedback("success", "✅ Password changed successfully!");
+            this.reset();
+          }
+        });
+      document
+        .getElementById("passwordForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const formData = new FormData(this);
+          const res = await fetch("/user/update-password", {
+            method: "POST",
+            body: formData,
+          });
+
+          const data = await res.json();
+          const msgBox = document.getElementById("msg");
+
+          if (data.success) {
+            msgBox.innerHTML = `<div style="color: green;">${data.message}</div>`;
+          } else {
+            msgBox.innerHTML = `<div style="color: red;">${data.message}</div>`;
+          }
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head') %>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= blog.title %> - Blogify</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .blog-page {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        margin: 0;
+        padding: 2rem 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .blog-page .blog-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .blog-page .blog-cover {
+        width: 100%;
+        height: 300px;
+        object-fit:fill;
+        display: block;
+      }
+
+      .blog-page .gradient-header {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        padding: 40px;
+        text-align: center;
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .blog-page .gradient-header .blog-title {
+        color: white !important;
+        margin: 0;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+      }
+
+      .blog-page .blog-content {
+        padding: 40px;
+      }
+
+      .blog-page .blog-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #2d3748;
+        line-height: 1.2;
+        word-wrap: break-word;
+      }
+
+      .blog-page .blog-meta {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #e2e8f0;
+        flex-wrap: wrap;
+      }
+
+      .blog-page .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #718096;
+        font-size: 14px;
+      }
+
+      .blog-page .blog-body {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #4a5568;
+        word-wrap: break-word;
+      }
+
+      .blog-page .blog-body h1,
+      .blog-page .blog-body h2,
+      .blog-page .blog-body h3 {
+        color: #2d3748;
+        margin: 2rem 0 1rem 0;
+        line-height: 1.3;
+      }
+
+      .blog-page .blog-body h1 {
+        font-size: 1.8rem;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 0.5rem;
+      }
+
+      .blog-page .blog-body p {
+        margin-bottom: 1.5rem;
+        text-align: justify;
+      }
+
+      .blog-page .blog-body img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+        display: block;
+      }
+
+      .blog-page .blog-body ul,
+      .blog-page .blog-body ol {
+        margin: 1rem 0;
+        padding-left: 2rem;
+      }
+
+      .blog-page .blog-body blockquote {
+        border-left: 4px solid #6a11cb;
+        padding-left: 1.5rem;
+        margin: 1.5rem 0;
+        color: #718096;
+        font-style: italic;
+      }
+
+      .blog-page .blog-body code {
+        background: #f7fafc;
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+      }
+
+      .blog-page .blog-body pre {
+        background: #2d3748;
+        color: #e2e8f0;
+        padding: 1.5rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 1.5rem 0;
+      }
+
+      .blog-page .tag {
+        background: #e2e8f0;
+        color: #4a5568;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        margin: 0 4px 4px 0;
+        display: inline-block;
+      }
+
+      .blog-page .icon {
+        width: 16px;
+        height: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      @media (max-width: 768px) {
+        .blog-page .blog-container {
+          margin: 1rem;
+          border-radius: 12px;
+        }
+
+        .blog-page .blog-content {
+          padding: 20px;
+        }
+
+        .blog-page .blog-title {
+          font-size: 2rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .blog-page .blog-title {
+          font-size: 1.7rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/navbar') %>
+
+    <div class="blog-page">
+      <div class="blog-container">
+        <% if (blog.coverImage && blog.coverImage.length > 0) { %>
+        <img
+          src="<%= blog.coverImage %>"
+          alt="Cover for <%= blog.title %>"
+          class="blog-cover"
+        />
+        <% } else { %>
+        <div class="gradient-header">
+          <h1 class="blog-title"><%= blog.title %></h1>
+        </div>
+        <% } %>
+
+        <div class="blog-content">
+          <% if (blog.coverImage && blog.coverImage.length > 0) { %>
+          <h1 class="blog-title"><%= blog.title %></h1>
+          <% } %>
+
+          <div class="blog-meta">
+            <div class="meta-item">
+              <span>
+                <i class="fas fa-feather-alt icon"></i>
+                <%= blog.authorName %>
+              </span>
+            </div>
+
+            <div class="meta-item">
+              <i class="far fa-calendar-alt icon"></i>
+              <%= new Date(blog.createdAt).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              }) %>
+            </div>
+
+            <div class="meta-item">
+              <i class="fas fa-eye icon"></i>
+              <%= blog.viewcount || 0 %> views
+            </div>
+
+            <% if (blog.tags && blog.tags.length > 0) { %>
+            <div class="meta-item">
+              <i class="fas fa-tags icon"></i>
+              <div>
+                <% blog.tags.forEach(tag => { %>
+                <span class="tag"><%= tag %></span>
+                <% }) %>
+              </div>
+            </div>
+            <% } %>
+          </div>
+
+          <div class="blog-body"><%- blog.content %></div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('./partials/scripts') %>
+  </body>
+</html>

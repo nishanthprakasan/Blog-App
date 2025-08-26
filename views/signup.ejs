@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 500px;
+        overflow: auto;
+        max-height: 90vh;
+      }
+
+      .header {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        color: white;
+        padding: 25px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-weight: 600;
+        font-size: 24px;
+      }
+
+      .form-container {
+        padding: 30px;
+        overflow-y: auto;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .input-with-icon {
+        position: relative;
+      }
+
+      .input-with-icon i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6a11cb;
+      }
+
+      .input-with-icon input {
+        width: 100%;
+        padding: 14px 14px 14px 45px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      .input-with-icon input:focus {
+        border-color: #6a11cb;
+        outline: none;
+      }
+
+      .error-message {
+        color: #e74c3c;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+      }
+
+      .btn-submit {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 8px;
+        width: 100%;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.3s;
+      }
+
+      .btn-submit:hover {
+        opacity: 0.9;
+      }
+
+      .login-link {
+        text-align: center;
+        margin-top: 20px;
+        color: #666;
+      }
+
+      .login-link a {
+        color: #6a11cb;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .login-link a:hover {
+        text-decoration: underline;
+      }
+
+      .password-toggle {
+        position: absolute;
+        right: 50px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #777;
+      }
+
+      .file-upload {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .file-upload-preview {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #ddd;
+        margin-bottom: 10px;
+        display: none;
+      }
+
+      .file-upload-label {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #f0f0f0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .file-upload-label:hover {
+        background: #e0e0e0;
+      }
+
+      .file-upload-input {
+        display: none;
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          border-radius: 10px;
+        }
+
+        .form-container {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Create Your Account</h1>
+      </div>
+
+      <div class="form-container">
+        <form
+          id="signupForm"
+          method="POST"
+          action="/user/signup"
+          enctype="multipart/form-data"
+        >
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <div class="input-with-icon">
+              <i class="fas fa-user"></i>
+              <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
+            <div class="error-message" id="nameError">
+              Please enter your full name
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <div class="input-with-icon">
+              <i class="fas fa-envelope"></i>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+            <div class="error-message" id="emailError">
+              Please enter a valid email address
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-with-icon">
+              <i class="fas fa-lock"></i>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Create a password (min. 6 characters)"
+                minlength="6"
+                required
+              />
+              <span class="password-toggle" id="passwordToggle">
+                <i class="fas fa-eye"></i>
+              </span>
+            </div>
+            <div class="error-message" id="passwordError">
+              Password must be at least 6 characters
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Profile Photo (Optional)</label>
+            <div class="file-upload">
+              <img
+                id="previewImage"
+                class="file-upload-preview"
+                src=""
+                alt="Preview"
+              />
+              <label for="profileImage" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+              </label>
+              <input
+                type="file"
+                id="profileImage"
+                name="profileImage"
+                class="file-upload-input"
+                accept="image/*"
+              />
+              <div
+                id="fileName"
+                style="margin-top: 5px; font-size: 14px; color: #666"
+              ></div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit">Sign Up</button>
+        </form>
+
+        <div class="login-link">
+          Already have an account? <a href="/user/login">Log In</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("signupForm")
+        .addEventListener("submit", function (e) {
+          let isValid = true;
+
+          const fullName = document.getElementById("fullName").value;
+          if (fullName.trim() === "" || fullName.length < 2) {
+            document.getElementById("nameError").style.display = "block";
+            isValid = false;
+          } else {
+            document.getElementById("nameError").style.display = "none";
+          }
+
+          const email = document.getElementById("email").value;
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailPattern.test(email)) {
+            document.getElementById("emailError").style.display = "block";
+            isValid = false;
+          } else {
+            document.getElementById("emailError").style.display = "none";
+          }
+
+          const password = document.getElementById("password").value;
+          if (password.length < 6) {
+            document.getElementById("passwordError").style.display = "block";
+            isValid = false;
+          } else {
+            document.getElementById("passwordError").style.display = "none";
+          }
+
+          if (!isValid) {
+            e.preventDefault();
+            alert("Please fix the errors before submitting.");
+          }
+        });
+
+      document
+        .getElementById("passwordToggle")
+        .addEventListener("click", function () {
+          const passwordInput = document.getElementById("password");
+          const icon = this.querySelector("i");
+
+          if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+          } else {
+            passwordInput.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+          }
+        });
+
+      document
+        .getElementById("profileImage")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          const preview = document.getElementById("previewImage");
+          const fileName = document.getElementById("fileName");
+
+          if (file) {
+            fileName.textContent = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              preview.src = e.target.result;
+              preview.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+          } else {
+            preview.style.display = "none";
+            fileName.textContent = "";
+          }
+        });
+    </script>
+  </body>
+</html>
